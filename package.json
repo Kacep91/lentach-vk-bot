@@ -1,0 +1,19 @@
+{
+  "name": "lentach-ru-bot",
+  "version": "1.0.0",
+  "description": "A bot for Lentach VK-group",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "author": "Aleksei Demochko",
+  "license": "MIT",
+  "dependencies": {
+    "@vk-io/hear": "^1.1.1",
+    "axios": "^1.7.2",
+    "body-parser": "^1.20.2",
+    "express": "^4.19.2",
+    "vk-io": "^4.9.1"
+  }
+}
