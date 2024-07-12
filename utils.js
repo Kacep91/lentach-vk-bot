@@ -4,8 +4,7 @@ import { randomInt } from 'crypto';
 export let lastMessageTimestamp = {}; // Объект для хранения времени последнего сообщения от пользователя
 
 export const groupId = 226526399;
-export const access_token = `vk1.a.YHL9ADsnKGfDaGo4qtQQHOHBqJR6OODjmpyFGYXtAgAyHfLBuTrE1EIBI-hZnwNAPw3lL977hLOfBgRl2fLGZB2VDnys80aW2NZ1H4pdBKfXEO7vlyxJ8IvwcU34qb7KzFZmFg2fJQgNiRBE-JgA4eIBNmC9TpK4BMFksgbfkm3MIF5_Oq-bH2T61gok1RcJ9MxkPs1AsQ25U-nmWQN2DQ`;
-
+export const access_token = `vk1.a.YHL9ADsnKGfDaGo4qtQQHOHBqJR6OODjmpyFGYXtAgAyHfLBuTrE1EIBI-hZnwNAPw3lL977hLOfBgRl2fLGZB2VDnys80aW2NZ1H4pdBKfXEO7vlyxJ8IvwcU34qb7KzFZmFg2fJQgNiRBE-JgA4eIBNmC9TpK4BMFksgbfkm3MIF5_Oq-bH2T61gok1RcJ9MxkPs1AsQ25U-nmWQN2DQ`; // Test222
 
 export const vk = new VK({
     token: access_token,
@@ -315,7 +314,7 @@ export async function getUserInfo(userId) {
         const response = await vk.api.users.get({
             user_ids: userId,
             access_token: access_token,
-            v: '5.199' // Укажите версию API
+            v: '5.131'
         });
         return response[0] || { firstName: '', lastName: '' };
     } catch (error) {
@@ -333,7 +332,7 @@ export const isUserAgreed = (userId) => {
 export async function isUserSubscribed(userId) {
     try {
         const response = await vk.api.groups.isMember({
-            group_id: "club226526399",
+            group_id: groupId,
             access_token: access_token,
             user_id: userId
         });

@@ -138,37 +138,37 @@ vk.updates.on('wall_repost', async (context) => {
     }
 });
 
-vk.updates.on('message_new', async (context) => {
-    // Убираем проверку на чат, чтобы обрабатывать все сообщения
-    const userId = context.senderId;
+// vk.updates.on('message_new', async (context) => {
+//     // Убираем проверку на чат, чтобы обрабатывать все сообщения
+//     const userId = context.senderId;
 
-    if (isAdmin(userId)) {
-        await hearManager.middleware(context);
-        return;
-        // Проверяем, было ли уже отправлено приветствие этому пользователю
-    } else if (!greetedUsers.find(item => item === userId)) {
-        // Отправляем приветственное сообщение
-        await context.send(`Если ты это читаешь, ты человек.\nВедь собаки, кошки, рыбки не умеют читать, а ты можешь всё — тусить на VK Fest и играть в петанк Лентач-Мемтач и многое другое.\nЗаписывайся на игру и вперёд, быстрее, выше сильнее и вот это всё.\n`, {
-            keyboard: Keyboard.keyboard([
-                Keyboard.textButton({
-                    label: '!ОК, согласен',
-                    color: Keyboard.PRIMARY_COLOR
-                }),
-                Keyboard.textButton({
-                    label: '!Я не на VK Fest',
-                    color: Keyboard.SECONDARY_COLOR
-                }),
-            ])
-        });
+//     if (isAdmin(userId)) {
+//         await hearManager.middleware(context);
+//         return;
+//         // Проверяем, было ли уже отправлено приветствие этому пользователю
+//     } else if (!greetedUsers.find(item => item === userId)) {
+//         // Отправляем приветственное сообщение
+//         await context.send(`Если ты это читаешь, ты человек.\nВедь собаки, кошки, рыбки не умеют читать, а ты можешь всё — тусить на VK Fest и играть в петанк Лентач-Мемтач и многое другое.\nЗаписывайся на игру и вперёд, быстрее, выше сильнее и вот это всё.\n`, {
+//             keyboard: Keyboard.keyboard([
+//                 Keyboard.textButton({
+//                     label: '!ОК, согласен',
+//                     color: Keyboard.PRIMARY_COLOR
+//                 }),
+//                 Keyboard.textButton({
+//                     label: '!Я не на VK Fest',
+//                     color: Keyboard.SECONDARY_COLOR
+//                 }),
+//             ])
+//         });
 
-        // Добавляем пользователя в список поприветствованных
-        greetedUsers.push(userId);
-        await saveGreetedUsers()
-    }
+//         // Добавляем пользователя в список поприветствованных
+//         greetedUsers.push(userId);
+//         await saveGreetedUsers()
+//     }
 
-    // Добавляем обработку команд через hearManager
-    await hearManager.middleware(context);
-});
+//     // Добавляем обработку команд через hearManager
+//     await hearManager.middleware(context);
+// });
 
 hearManager.hear('!Я не на VK Fest', async (context) => {
     await context.send(`Если ты не на VK Fest… окажись там виртуально!\nИ краткий обзор бренд-зоны Lentach на VK Fest.\n`, {
@@ -348,6 +348,7 @@ hearManager.hear('!Регистрация на игру', async (context) => {
 });
 
 hearManager.hear('!Правила игры', async (context) => {
+    const isUserRegistered = teams?.purple.find(item => item?.userId === userId) || teams?.white?.find(item => item?.userId === userId)
     await context.send(`Правила игры:\n
     Петанк – это вид спорта, в котором:\n
         - 3 игрока играют против 3 игроков.\n
@@ -362,13 +363,11 @@ hearManager.hear('!Правила игры', async (context) => {
         - После того как все шары брошены, подсчитываются очки.\n
         - Команда получает одно очко за каждый шар, который находится ближе к кошонету, чем ближайший шар соперника.\n\n
         - Игра продолжается до тех пор, пока одна из команд не наберет 13 очков
-        `, { keyboard: keyboardRegistration });
+        `, { keyboard: isUserRegistered ? keyboardCancelRegistration : keyboardRegistration });
 });
 
 hearManager.hear('!Отменить регистрацию на игру', async (context) => {
     const userId = context.senderId;
-    // const isSubscriptionTrue = await isUserSubscribed(userId);
-    // const userAgreement = isUserAgreed(userId);
     const isUserRegistered = teams?.purple.find(item => item?.userId === userId) || teams?.white?.find(item => item?.userId === userId)
 
     if (isUserRegistered) {
