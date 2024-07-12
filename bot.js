@@ -60,33 +60,15 @@ const keyboardRegistration = Keyboard.keyboard([
     Keyboard.textButton({
         label: '!Правила игры',
         color: Keyboard.PRIMARY_COLOR
+    }),
+    Keyboard.urlButton({
+        label: 'Правила проведения акции',
+        url: "https://disk.yandex.ru/i/cfdQA9XSjrCCGA"
     })
 ])
 
-// Функция для отправки сообщения с соглашением
-// const sendAgreementMessage = async (context) => {
-//     const agreementMessage = `                        СОГЛАСИЕ НА ОБРАБОТКУ ПЕРСОНАЛЬНЫХ ДАННЫХ\n
-//     Я, пользователь социальной сети ВКонтакте, даю свое согласие Сообществу Lentach (далее - Оператор) на обработку моих персональных данных`;
-//     await context.send(agreementMessage, {
-//         keyboard: Keyboard.keyboard([
-//             Keyboard.textButton({
-//                 label: '!Принять',
-//                 color: Keyboard.POSITIVE_COLOR
-//             }),
-//             Keyboard.textButton({
-//                 label: '!Отклонить',
-//                 color: Keyboard.NEGATIVE_COLOR
-//             }),
-//             Keyboard.textButton({
-//                 label: '!Подробнее',
-//                 color: Keyboard.PRIMARY_COLOR
-//             })
-//         ]).oneTime()
-//     });
-// };
-
 hearManager.hear('Погнали', async (context) => {
-    await context.send(`Если ты это читаешь, ты человек.\nВедь собаки, кошки, рыбки не умеют читать, а ты можешь всё — тусить на VK Fest и играть в петанк Лентач-Мемтач и многое другое.\nЗаписывайся на игру и вперёд, быстрее, выше сильнее и вот это всё.\n`, {
+    await context.send(`Если ты это читаешь, ты человек.\nВедь собаки, кошки, рыбки не умеют читать, а ты можешь всё — тусить на VK Fest и играть в Мемный петанк и многое другое.\nЗаписывайся на игру и вперёд, быстрее, выше сильнее и вот это всё.\n`, {
         keyboard: Keyboard.keyboard([
             Keyboard.textButton({
                 label: '!ОК, согласен',
@@ -101,7 +83,7 @@ hearManager.hear('Погнали', async (context) => {
 });
 
 hearManager.hear('!Заново', async (context) => {
-    await context.send(`Если ты это читаешь, ты человек.\nВедь собаки, кошки, рыбки не умеют читать, а ты можешь всё — тусить на VK Fest и играть в петанк Лентач-Мемтач и многое другое.\nЗаписывайся на игру и вперёд, быстрее, выше сильнее и вот это всё.\n`, {
+    await context.send(`Если ты это читаешь, ты человек.\nВедь собаки, кошки, рыбки не умеют читать, а ты можешь всё — тусить на VK Fest и играть в Мемный петанк и многое другое.\nЗаписывайся на игру и вперёд, быстрее, выше сильнее и вот это всё.\n`, {
         keyboard: Keyboard.keyboard([
             Keyboard.textButton({
                 label: '!ОК, согласен',
@@ -124,7 +106,7 @@ function hasHashtag(text, hashtag) {
 vk.updates.on('wall_repost', async (context) => {
     const { wall } = context;
 
-    if (wall && wall.text && hasHashtag(wall.text, '#лентачмемтач')) {
+    if (wall && wall.text && hasHashtag(wall.text, '#мемныйпетанк')) {
         try {
             await vk.api.messages.send({
                 peer_id: context.senderId,
@@ -148,7 +130,7 @@ vk.updates.on('wall_repost', async (context) => {
 //         // Проверяем, было ли уже отправлено приветствие этому пользователю
 //     } else if (!greetedUsers.find(item => item === userId)) {
 //         // Отправляем приветственное сообщение
-//         await context.send(`Если ты это читаешь, ты человек.\nВедь собаки, кошки, рыбки не умеют читать, а ты можешь всё — тусить на VK Fest и играть в петанк Лентач-Мемтач и многое другое.\nЗаписывайся на игру и вперёд, быстрее, выше сильнее и вот это всё.\n`, {
+//         await context.send(`Если ты это читаешь, ты человек.\nВедь собаки, кошки, рыбки не умеют читать, а ты можешь всё — тусить на VK Fest и играть в петанк Лентача-Мемный петанк и многое другое.\nЗаписывайся на игру и вперёд, быстрее, выше сильнее и вот это всё.\n`, {
 //             keyboard: Keyboard.keyboard([
 //                 Keyboard.textButton({
 //                     label: '!ОК, согласен',
@@ -339,6 +321,8 @@ hearManager.hear('!ОК, согласен', async (context) => {
 // });
 
 hearManager.hear('!Регистрация на игру', async (context) => {
+    console.log('game', game);
+    console.log('teams', teams);
     // if (userAgreement && isSubscriptionTrue) {
     context.send(`Ожидайте, идёт регистрация на игру...`, { keyboard: Keyboard.builder() });
     await handleJoinTeam(context)
@@ -348,27 +332,42 @@ hearManager.hear('!Регистрация на игру', async (context) => {
 });
 
 hearManager.hear('!Правила игры', async (context) => {
+    const userId = context.senderId;
     const isUserRegistered = teams?.purple.find(item => item?.userId === userId) || teams?.white?.find(item => item?.userId === userId)
     await context.send(`Правила игры:\n
-    Петанк – это вид спорта, в котором:\n
-        - 3 игрока играют против 3 игроков.\n
-        - Каждый игрок имеет по 2 шара.\n
-        - Игроки должны провести жеребьевку, чтобы определить – какая из двух команд выберет дорожку, если она не была назначена организаторами, и первой бросит кошонет.\n
-        - Команда, начинающая игру, чертит на земле круг диаметром 30-50 см или использует круг-шаблон\n\n
-        - Игрок первой команды бросает деревянный шарик (кошонет) на расстояние от 6 до 10 метров, но не ближе чем на 50 см от любого препятствия.\n
-        - Ноги игрока должны оставаться внутри круга до тех пор, пока кошонет не остановится.\n
-        - После броска кошонета любой игрок первой команды бросает первый металлический шар, стараясь разместить его как можно ближе к кошонету.\n
-        - Затем игроки второй команды пытаются бросить свои шары ближе к кошонету или выбить шары соперника.\n\n
-        - Игроки команд поочередно бросают шары, пока у одной из команд не закончатся все шары.\n
-        - После того как все шары брошены, подсчитываются очки.\n
-        - Команда получает одно очко за каждый шар, который находится ближе к кошонету, чем ближайший шар соперника.\n\n
-        - Игра продолжается до тех пор, пока одна из команд не наберет 13 очков
-        `, { keyboard: isUserRegistered ? keyboardCancelRegistration : keyboardRegistration });
+
+Петанк — это вид спорта, в котором:\n
+
+– 3 игрока играют против 3 игроков. Если вас по двое, тоже welcome!\n
+
+– Каждый игрок имеет по 2 шара.\n
+
+– Игроки должны провести жеребьевку, чтобы определить — какая из двух команд выберет дорожку, если она не была назначена организаторами, и первой бросит кошонет.\n
+
+– Команда, начинающая игру, чертит на земле круг диаметром 30-50 см или использует круг-шаблон.\n
+
+– Игрок первой команды бросает деревянный шарик (кошонет) на расстояние от 6 до 10 метров, но не ближе чем на 50 см от любого препятствия.\n
+
+– Ноги игрока должны оставаться внутри круга до тех пор, пока кошонет не остановится.\n
+
+– После броска кошонета любой игрок первой команды бросает первый металлический шар, стараясь разместить его как можно ближе к кошонету.\n
+
+– Затем игроки второй команды пытаются бросить свои шары ближе к кошонету или выбить шары соперника.\n
+
+– Игроки команд поочередно бросают шары, пока у одной из команд не закончатся все шары.\n
+
+– После того как все шары брошены, подсчитываются очки.\n
+
+– Команда получает одно очко за каждый шар, который находится ближе к кошонету, чем ближайший шар соперника.\n
+
+– Игра продолжается до тех пор, пока одна из команд не наберет 13 очков\n`, { keyboard: isUserRegistered ? keyboardCancelRegistration : keyboardRegistration });
 });
 
 hearManager.hear('!Отменить регистрацию на игру', async (context) => {
     const userId = context.senderId;
     const isUserRegistered = teams?.purple.find(item => item?.userId === userId) || teams?.white?.find(item => item?.userId === userId)
+    console.log('game', game);
+    console.log('teams', teams);
 
     if (isUserRegistered) {
         const keyboard = Keyboard.keyboard([
@@ -389,10 +388,10 @@ hearManager.hear('!Отменить регистрацию на игру', async
     }
 });
 
+console.log('game', game);
+console.log('teams', teams);
 hearManager.hear('!Да, отменяем', async (context) => {
     const userId = context.senderId;
-    // const isSubscriptionTrue = await isUserSubscribed(userId);
-    // const userAgreement = isUserAgreed(userId);
     const isUserRegistered = teams?.purple.find(item => item?.userId === userId) || teams?.white?.find(item => item?.userId === userId)
 
     if (isUserRegistered) {
@@ -424,7 +423,7 @@ hearManager.hear('!Старт игры', async (context) => {
             await vk.api.messages.send({
                 user_id: player?.userId,
                 random_id: randomInt(1000000),
-                message: `Игра начинается! Проходи к полю.\nИ не забывай постить свои шары (петанковые) с прикольными подписями и хэштэгом #лентачмемтач у себя в VK.\nЗа крутые публикации подарим стикер пак.\n`,
+                message: `Игра начинается! Проходи к полю.\nИ не забывай постить свои шары (петанковые) с прикольными подписями и хэштэгом #мемныйпетанк у себя в VK.\nЗа крутые публикации подарим стикер пак.\n`,
                 keyboard: Keyboard.builder().
                     textButton({
                         label: '!Правила игры',

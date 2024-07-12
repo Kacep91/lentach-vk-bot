@@ -11,6 +11,9 @@ export const vk = new VK({
     pollingGroupId: groupId
 });
 
+
+const userTimers = {}; // Объект для хранения таймеров пользователей
+
 const keyboardCancelRegistration = Keyboard.keyboard([
     Keyboard.textButton({
         label: '!Отменить регистрацию на игру',
@@ -37,7 +40,7 @@ export const saveUsers = async () => fs.writeFileSync('users.json', JSON.stringi
 export const saveUserAgreement = async () => fs.writeFileSync('usersAgreement.json', JSON.stringify(usersAgreement, null, 2));
 export const saveGreetedUsers = async () => fs.writeFileSync('greetedUsers.json', JSON.stringify(greetedUsers, null, 2));
 
-export const teams = {
+export let teams = {
     purple: [],
     white: []
 };
@@ -77,6 +80,18 @@ export async function saveWinnerTeam(team) {
                 })
             ])
         });
+        // Проверка времени слота относительно текущего времени
+        if (userTimers[player?.userId]) {
+            clearTimeout(userTimers?.[player?.userId]?.tShirtTimer);
+        }
+        userTimers[userId] = {};
+        userTimers[userId].tShirtTimer = setTimeout(async () => {
+            await context.send(`Лентач-Мемтач — это соревнование не только по петанку, но и по постингу: в каждом раунде команда, где игроки запостят у себя в VK больше фото и видео игры, награждается стикерпаком с отборными мемами Лентача.\n
+
+И если кто-то в команде одинокий волк постинга, мы это уважим и подарим ему стикерпак.\n 
+
+Каждая 15 команда получает  футболку с мемом от Лентача.\n`);
+        }, 5 * 60000);
     }
 
     for (const player of loserTeam) {
@@ -96,6 +111,15 @@ export async function saveWinnerTeam(team) {
                 })
             ])
         });
+        // Проверка времени слота относительно текущего времени
+        if (userTimers[player?.userId]) {
+            clearTimeout(userTimers?.[player?.userId]?.tShirtTimer);
+        }
+
+        userTimers[userId] = {};
+        userTimers[userId].tShirtTimer = setTimeout(async () => {
+            await context.send(`Выкладывайте фотки! (!!!Нужен текст!!!)`);
+        }, 5 * 60000);
     }
     game = { ...game, winner: team }
     winnerList.push(game)
@@ -116,8 +140,8 @@ export async function saveWinnerTeam(team) {
 export const winnerList = fs.existsSync('winners.json') ? JSON.parse(fs.readFileSync('winners.json')) : [];
 
 export async function startGame() {
-    if ((teams['purple'].length + teams['white'].length) >= 3) {
-        const gameNumber = winnerList?.length + 1
+    if ((teams['purple'].length + teams['white'].length) >= 2) {
+        const gameNumber = winnerList?.length + 1;
         game = {
             id: gameNumber,
             timestamp: new Date().toISOString(),
@@ -127,83 +151,46 @@ export async function startGame() {
             winner: null
         };
 
+
         const whiteTeamComposition = teams['white']?.map(item => {
-            const userFound = users?.find(user => user.userId === item?.userId)
-            return `${userFound?.firstName || 'NoName'} ${userFound?.lastName || 'NoName'} ID: ${userFound?.userId || item}`
-        })
+            const userFound = users?.find(user => user.userId === item?.userId);
+            return `${userFound?.firstName || 'NoName'} ${userFound?.lastName || 'NoName'} ID: ${userFound?.userId || item}`;
+        });
 
         const purpleTeamComposition = teams['purple']?.map(item => {
-            const userFound = users?.find(user => user.userId === item?.userId)
-            return `${userFound?.firstName || 'NoName'} ${userFound?.lastName || 'NoName'} ID: ${userFound?.userId || item}`
-        })
+            const userFound = users?.find(user => user.userId === item?.userId);
+            return `${userFound?.firstName || 'NoName'} ${userFound?.lastName || 'NoName'} ID: ${userFound?.userId || item}`;
+        });
 
-        try {
-            // Отправка сообщения администратору
+        try {// Отправка сообщения администратору
             for (const adminId of adminIds) {
                 await new Promise(resolve => setTimeout(resolve, 500)); // Задержка в 0,5 секунд
                 await vk.api.messages.send({
                     user_id: adminId,
                     random_id: randomInt(1000000),
-                    message: `АДМИН:\n
-                    Начинается Игра №${gameNumber}\n
-                    Состав команд (${(teams['purple'].length + teams['white'].length)} игроков):\n
-                    Фиолетовая:\n
-                    ${purpleTeamComposition?.join('\n')}\n
-                    Белая:\n
-                    ${whiteTeamComposition?.join('\n')}\n`,
+                    message: `${gameNumber % 15 === 0 ? 'Не забудь, что за каждую 15 игру мы дарим участникам футболки' : ''}\n\n Начинается Игра №${gameNumber}\n Состав команд (${(teams['purple'].length + teams['white'].length)} игроков):\n Фиолетовая:\n ${purpleTeamComposition?.join('\n')}\n Белая:\n ${whiteTeamComposition?.join('\n')}\n`,
                     keyboard: Keyboard.builder()
                         .textButton({ label: '!Старт игры' })
                         .textButton({ label: '!Отмена игры' })
                 });
             }
         } catch (error) {
-            console.log('error 1', error)
-        }
-
-    } else {
-        const gameNumber = winnerList?.length + 1
-        const whiteTeamComposition = teams['white']?.map(item => {
-            const userFound = users?.find(user => user.userId === item?.userId)
-            return `${userFound?.firstName || 'NoName'} ${userFound?.lastName || 'NoName'} ID: ${userFound?.userId || item}`
-        })
-
-        const purpleTeamComposition = teams['purple']?.map(item => {
-            const userFound = users?.find(user => user.userId === item?.userId)
-            return `${userFound?.firstName || 'NoName'} ${userFound?.lastName || 'NoName'} ID: ${userFound?.userId || item}`
-        })
-
-        try {
-            // Отправка сообщения администратору
-            for (const adminId of adminIds) {
-                await new Promise(resolve => setTimeout(resolve, 500)); // Задержка в 0,5 секунд
-                await vk.api.messages.send({
-                    user_id: adminId,
-                    random_id: randomInt(1000000),
-                    message: `АДМИН:\n
-                    Начинается Игра №${gameNumber}\n
-                    Состав команд (${(teams['purple'].length + teams['white'].length)} игроков):\n
-                    Фиолетовая:\n
-                    ${purpleTeamComposition?.join('\n')}\n
-                    Белая:\n
-                    ${whiteTeamComposition?.join('\n')}\n`,
-                    keyboard: Keyboard.builder()
-                        .textButton({ label: '!Старт игры' })
-                        .textButton({ label: '!Отмена игры' })
-                });
-            }
-        } catch (error) {
-            console.log('error 2', error)
+            console.log('error 1', error);
         }
     }
 }
 
 export async function handleJoinTeam(context) {
+    console.log('handleJoinTeam teams', teams)
+    const userId = context.senderId
     // Проверка, находится ли пользователь уже в одной из команд
-    if (teams.purple.some(player => player.userId === context.senderId) || teams.white.some(player => player.userId === context.senderId)) {
+    const isInPurpleTeam = teams.purple.some(player => player.userId === userId);
+    const isInWhiteTeam = teams.white.some(player => player.userId === userId);
+
+    if (isInPurpleTeam || isInWhiteTeam) {
         await context.send('Вы уже находитесь в одной из команд.', { keyboard: keyboardCancelRegistration });
         return;
     }
-
     // Определяем, в какую команду добавить игрока
     const teamToJoin = teams.purple.length <= teams.white.length ? 'purple' : 'white';
 
@@ -219,15 +206,21 @@ export async function handleJoinTeam(context) {
 
     if (teams[teamToJoin].length < 3) {
         teams[teamToJoin].push({ userId: context.senderId });
-        await context.send(`Поздравляем, ты успешно обладаешь местом в команде ${teamToJoin === 'purple' ? 'Фиолетовых' : 'Белых'} Лентача-Мемтача. Хорошего петанка!`, { keyboard: keyboardCancelRegistration });
+        await context.send(`Поздравляем, ты успешно обладаешь местом в команде ${teamToJoin === 'purple' ? 'Фиолетовых' : 'Белых'} Мемного петанка. Хорошего петанка!`, { keyboard: keyboardCancelRegistration });
+
+        await context.send(`Лентач-Мемтач — это соревнование не только по петанку, но и по постингу: в каждом раунде команда, где игроки запостят у себя в VK больше фото и видео игры, награждается стикерпаком с отборными мемами Лентача.\n
+
+И если кто-то в команде одинокий волк постинга, мы это уважим и подарим ему стикерпак.\n 
+
+Каждая 15 команда получает  футболку с мемом от Лентача.\n`, { keyboard: keyboardCancelRegistration });
     } else {
         queue.push(queueItem);
-        await context.send(`Ты записан/-а. Не на диктофон, а в лист ожидания.\nКак только освободится место, отправим в этот чат весточку. А пока мем скрасит ожидание:\n`, { keyboard: keyboardRules });
+        await context.send(`Ты записан/-а. Не на диктофон, а в лист ожидания.\nКак только освободится место, отправим в этот чат весточку.`, { keyboard: keyboardRules });
     }
 
     // Проверяем, можно ли добавить игроков из очереди
     if (queue.length > 0 && (teams['purple'].length < 3 || teams['white'].length < 3)) {
-        await checkAndAddPlayersFromQueue();
+        !teams.purple.some(player => player.userId === nextPlayer?.userId) && !teams.white.some(player => player.userId === nextPlayer?.userId) && (await checkAndAddPlayersFromQueue());
     } else {
         await startGame();
     }
@@ -242,11 +235,13 @@ export async function checkAndAddPlayersFromQueue() {
         const teamToJoin = teams.purple.length <= teams.white.length ? 'purple' : 'white';
 
         // Проверка, находится ли пользователь уже в одной из команд
+
+        console.log('checkAndAddPlayersFromQueue teams', teams)
         if (teams.purple.some(player => player.userId === nextPlayer?.userId) || teams.white.some(player => player.userId === nextPlayer?.userId)) {
             await vk.api.messages.send({
                 user_id: nextPlayer.userId,
                 random_id: randomInt(1000000),
-                message: 'Вы уже находитесь в одной из команд.',
+                message: 'Вы уже находитесь в одной из команд. 2',
                 keyboard: keyboardCancelRegistration
             });
             return;
@@ -261,7 +256,18 @@ export async function checkAndAddPlayersFromQueue() {
                 await vk.api.messages.send({
                     user_id: nextPlayer.userId,
                     random_id: randomInt(1000000),
-                    message: `Поздравляем, ты успешно обладаешь местом в команде ${teamToJoin === 'purple' ? 'Фиолетовых' : 'Белых'} Лентача-Мемтача. Хорошего петанка!`,
+                    message: `Поздравляем, ты успешно обладаешь местом в команде ${teamToJoin === 'purple' ? 'Фиолетовых' : 'Белых'} Мемного петанка. Хорошего петанка!`,
+                    keyboard: keyboardCancelRegistration
+                });
+                await new Promise(resolve => setTimeout(resolve, 500)); // Задержка в 0,5 секунд
+                await vk.api.messages.send({
+                    user_id: nextPlayer.userId,
+                    random_id: randomInt(1000000),
+                    message: `Лентач-Мемтач — это соревнование не только по петанку, но и по постингу: в каждом раунде команда, где игроки запостят у себя в VK больше фото и видео игры, награждается стикерпаком с отборными мемами Лентача.\n
+
+                    И если кто-то в команде одинокий волк постинга, мы это уважим и подарим ему стикерпак.\n 
+                    
+                    Каждая 15 команда получает  футболку с мемом от Лентача.\n`,
                     keyboard: keyboardCancelRegistration
                 });
             }
@@ -298,15 +304,17 @@ export const clearGame = async () => {
 }
 
 export const delistUser = async (userId) => {
-    const isPurple = game?.teams?.purple.find(item => item.userId === userId);
-    if (isPurple) {
-        game?.teams?.purple.filter(item => item.userId !== userId);
-        return;
-    } else {
-        game?.teams?.white.filter(item => item.userId !== userId);
-        return;
-    }
-}
+    // Удаление пользователя из команды "purple" и игры
+    game.purple = game.purple.filter(item => item.userId !== userId);
+    teams.purple = teams.purple.filter(item => item.userId !== userId);
+
+    // Удаление пользователя из команды "white" и игры
+    game.white = game.white.filter(item => item.userId !== userId);
+    teams.white = teams.white.filter(item => item.userId !== userId);
+
+    // Удаление пользователя из общего списка игроков игры
+    game.players = game.players.filter(item => item.userId !== userId);
+};
 
 // Функция для получения информации о пользователе
 export async function getUserInfo(userId) {
