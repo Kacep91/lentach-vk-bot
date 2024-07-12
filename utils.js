@@ -3,8 +3,8 @@ import fs from 'fs';
 import { randomInt } from 'crypto';
 export let lastMessageTimestamp = {}; // Объект для хранения времени последнего сообщения от пользователя
 
-export const groupId = 226526399;
-export const access_token = `vk1.a.YHL9ADsnKGfDaGo4qtQQHOHBqJR6OODjmpyFGYXtAgAyHfLBuTrE1EIBI-hZnwNAPw3lL977hLOfBgRl2fLGZB2VDnys80aW2NZ1H4pdBKfXEO7vlyxJ8IvwcU34qb7KzFZmFg2fJQgNiRBE-JgA4eIBNmC9TpK4BMFksgbfkm3MIF5_Oq-bH2T61gok1RcJ9MxkPs1AsQ25U-nmWQN2DQ`; // Test222
+export const groupId = 29534144;
+export const access_token = `vk1.a.M__d9kfi-K-02WBNxDwDnwhMLbpQf3NMvhDwsFqyL2r1lOfbYFfjtR4wdd0yJDfI9CCuWnB0x17dXojcV-A3ORRWmzbh0visWvKbW5pOqR7P0qF5FNQmy-lo-_vh6KUUTPD1b8qQSK9zsR0DxLPCs1eurQkOzDNlJ1Qtp-aMjE4ORPP68_SrWI-FbBxntfM_BCsfHJ_BGQ_k3dcGYX8YHA`;
 
 export const vk = new VK({
     token: access_token,
