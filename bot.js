@@ -183,10 +183,6 @@ hearManager.hear('!Я - рыбка', async (context) => {
                     url: 'https://vk.com/lentach',
                     color: Keyboard.SECONDARY_COLOR
                 }),
-                Keyboard.urlButton({
-                    label: 'Подписаться на Телеграм',
-                    url: 'https://t.me/oldlentach'
-                }),
                 Keyboard.textButton({
                     label: '!Заново',
                     color: Keyboard.SECONDARY_COLOR

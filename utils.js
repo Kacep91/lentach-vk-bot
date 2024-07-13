@@ -68,12 +68,8 @@ export async function saveWinnerTeam(team) {
         await vk.api.messages.send({
             user_id: String(player?.userId).length > 1 ? player?.userId : 5720735,
             random_id: randomInt(1000000),
-            message: `Поздравляем! Ваша команда победила!\nПолучи свой приз - стикерную ленту и сфотографируйся в Лентач фотобудке\nПодписывайся на нас в Телеграм!\n`,
+            message: `Поздравляем! Ваша команда победила!\nПолучи свой приз - стикерную ленту и сфотографируйся в Лентач фотобудке\n`,
             keyboard: Keyboard.keyboard([
-                Keyboard.urlButton({
-                    label: 'Подписаться на Телеграм',
-                    url: 'https://t.me/oldlentach'
-                }),
                 Keyboard.textButton({
                     label: '!Регистрация на игру',
                     color: Keyboard.POSITIVE_COLOR
@@ -104,12 +100,8 @@ export async function saveWinnerTeam(team) {
         await vk.api.messages.send({
             user_id: String(player?.userId).length > 1 ? player?.userId : 5720735,
             random_id: randomInt(1000000),
-            message: `Спасибо за участие!\nПолучи свой приз - стикерную ленту и сфотографируйся в Лентач фотобудке\nПодписывайся на нас в Телеграм!\n`,
+            message: `Спасибо за участие!\nПолучи свой приз - стикерную ленту и сфотографируйся в Лентач фотобудке\n`,
             keyboard: Keyboard.keyboard([
-                Keyboard.urlButton({
-                    label: 'Подписаться на Телеграм',
-                    url: 'https://t.me/oldlentach'
-                }),
                 Keyboard.textButton({
                     label: '!Регистрация на игру',
                     color: Keyboard.POSITIVE_COLOR
