@@ -33,7 +33,7 @@ const keyboardRules = Keyboard.keyboard([
 ])
 
 export const greetedUsers = fs.existsSync('greetedUsers.json') ? JSON.parse(fs.readFileSync('greetedUsers.json')) : [];
-export const adminIds = [5720735, 710320271, 528604423, 472830827, 577130021];//710320271
+export const adminIds = [5720735, 710320271, 528604423, 472830827, 577130021, 178488636, 276385455];//710320271
 export const users = fs.existsSync('users.json') ? JSON.parse(fs.readFileSync('users.json')) : [];
 export const usersAgreement = fs.existsSync('usersAgreement.json') ? JSON.parse(fs.readFileSync('usersAgreement.json')) : [];
 export const saveUsers = async () => fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
