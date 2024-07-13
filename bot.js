@@ -164,7 +164,7 @@ hearManager.hear('!Я не на VK Fest', async (context) => {
                 label: 'Подписаться на Телеграм',
                 url: 'https://t.me/oldlentach'
             }),
-            Keyboard.urlButton({
+            Keyboard.textButton({
                 label: '!Заново',
                 color: Keyboard.PRIMARY_COLOR
             }),
