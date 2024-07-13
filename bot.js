@@ -112,7 +112,7 @@ vk.updates.on('wall_repost', async (context) => {
                 peer_id: context.senderId,
                 message: 'Подойди к промоутеру, получи свой стикер пак!',
                 random_id: randomInt(1000000)
-            });
+            }).catch(error => console.log(error));
             console.log(`Отправлено сообщение пользователю ${context.senderId}`);
         } catch (error) {
             console.error('Ошибка при отправке сообщения:', error);
@@ -452,7 +452,7 @@ hearManager.hear('!Старт игры', async (context) => {
                         label: '!Правила игры',
                         color: Keyboard.PRIMARY_COLOR
                     })
-            });
+            }).catch(error => console.log(error));
         }
 
         await context.send('Игра началась! После окончания игры, выберите победителя:', {
@@ -510,7 +510,7 @@ hearManager.hear('!Да, отменить игру', async (context) => {
                     keyboard: Keyboard.builder()
                         .textButton({ label: '!Регистрация на игру' })
                         .textButton({ label: '!Правила игры' })
-                });
+                }).catch(error => console.log(error));
             }
         } catch (error) {
             console.error('Ошибка при отмене всех записей в боте', error)
@@ -554,7 +554,7 @@ hearManager.hear('!Да, сбросить игру', async (context) => {
                 keyboard: Keyboard.builder()
                     .textButton({ label: '!Регистрация на игру' })
                     .textButton({ label: '!Правила игры' })
-            });
+            }).catch(error => console.log(error));
         }
 
         await context.send('Игра сброшена! Ожидаем начала новой игры...', {

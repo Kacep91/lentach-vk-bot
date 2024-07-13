@@ -75,7 +75,7 @@ export async function saveWinnerTeam(team) {
                     color: Keyboard.POSITIVE_COLOR
                 })
             ])
-        });
+        }).catch(error => console.log(error));
         // Проверка времени слота относительно текущего времени
         if (userTimers[player?.userId]) {
             clearTimeout(userTimers[player?.userId].tShirtTimer);
@@ -91,7 +91,7 @@ export async function saveWinnerTeam(team) {
 А еще по секрету: каждая 15-ая команда получит футболку с мемами из бест-оф-зе-бест коллекции — только тссс!\n
 
 Желаем вам приятного Мемного Петанка!\n`
-            });
+            }).catch(error => console.log(error));
         }, 5 * 60000);
     }
 
@@ -107,7 +107,7 @@ export async function saveWinnerTeam(team) {
                     color: Keyboard.POSITIVE_COLOR
                 })
             ])
-        });
+        }).catch(error => console.log(error));
         // Проверка времени слота относительно текущего времени
         if (userTimers[player?.userId]) {
             clearTimeout(userTimers[player?.userId]?.tShirtTimer);
@@ -124,7 +124,7 @@ export async function saveWinnerTeam(team) {
 А еще по секрету: каждая 15-ая команда получит футболку с мемами из бест-оф-зе-бест коллекции — только тссс!\n
 
 Желаем вам приятного Мемного Петанка!\n`
-            });
+            }).catch(error => console.log(error));
 
         }, 5 * 60000);
     }
@@ -179,7 +179,7 @@ export async function startGame() {
                     keyboard: Keyboard.builder()
                         .textButton({ label: '!Старт игры' })
                         .textButton({ label: '!Отмена игры' })
-                });
+                }).catch(error => console.log(error));
             }
         } catch (error) {
             console.log('error 1', error);
@@ -251,7 +251,7 @@ export async function checkAndAddPlayersFromQueue() {
                 random_id: randomInt(1000000),
                 message: 'Вы уже находитесь в одной из команд. 2',
                 keyboard: keyboardCancelRegistration
-            });
+            }).catch(error => console.log(error));
             return;
         }
 
@@ -266,7 +266,7 @@ export async function checkAndAddPlayersFromQueue() {
                     random_id: randomInt(1000000),
                     message: `Поздравляем, ты успешно обладаешь местом в команде ${teamToJoin === 'purple' ? 'Фиолетовых' : 'Белых'} Мемного петанка. Хорошего петанка!`,
                     keyboard: keyboardCancelRegistration
-                });
+                }).catch(error => console.log(error));
                 await new Promise(resolve => setTimeout(resolve, 500)); // Задержка в 0,5 секунд
                 await vk.api.messages.send({
                     user_id: nextPlayer.userId,
@@ -278,7 +278,7 @@ export async function checkAndAddPlayersFromQueue() {
 
 Желаем вам приятного Мемного Петанка!\n`,
                     keyboard: keyboardCancelRegistration
-                });
+                }).catch(error => console.log(error));
             }
         } else {
             // Если обе команды заполнены, возвращаем игрока обратно в очередь
@@ -289,7 +289,7 @@ export async function checkAndAddPlayersFromQueue() {
                 random_id: randomInt(1000000),
                 message: `Ты записан/-а. Не на диктофон, а в лист ожидания.\nКак только освободится место, отправим в этот чат весточку. А пока мем скрасит ожидание:\n`,
                 keyboard: keyboardRules
-            });
+            }).catch(error => console.log(error));
             break;
         }
     }
@@ -332,7 +332,7 @@ export async function getUserInfo(userId) {
             user_ids: userId,
             access_token: access_token,
             v: '5.131'
-        });
+        }).catch(error => console.log(error));
         return response[0] || { firstName: '', lastName: '' };
     } catch (error) {
         console.error(error);
@@ -352,7 +352,7 @@ export async function isUserSubscribed(userId) {
             group_id: groupId,
             access_token: access_token,
             user_id: userId
-        });
+        }).catch(error => console.log(error));
 
         return response === 1;
     } catch (error) {
