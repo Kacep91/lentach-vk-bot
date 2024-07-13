@@ -33,7 +33,7 @@ const keyboardRules = Keyboard.keyboard([
 ])
 
 export const greetedUsers = fs.existsSync('greetedUsers.json') ? JSON.parse(fs.readFileSync('greetedUsers.json')) : [];
-export const adminIds = [5720735];//710320271
+export const adminIds = [5720735, 710320271, 528604423, 472830827, 577130021];//710320271
 export const users = fs.existsSync('users.json') ? JSON.parse(fs.readFileSync('users.json')) : [];
 export const usersAgreement = fs.existsSync('usersAgreement.json') ? JSON.parse(fs.readFileSync('usersAgreement.json')) : [];
 export const saveUsers = async () => fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
@@ -118,7 +118,11 @@ export async function saveWinnerTeam(team) {
 
         userTimers[userId] = {};
         userTimers[userId].tShirtTimer = setTimeout(async () => {
-            await context.send(`Выкладывайте фотки! (!!!Нужен текст!!!)`);
+            await context.send(`Лентач-Мемтач — это соревнование не только по петанку, но и по постингу: в каждом раунде команда, где игроки запостят у себя в VK больше фото и видео игры, награждается стикерпаком с отборными мемами Лентача.\n
+
+И если кто-то в команде одинокий волк постинга, мы это уважим и подарим ему стикерпак.\n 
+
+Каждая 15 команда получает  футболку с мемом от Лентача.\n`);
         }, 5 * 60000);
     }
     game = { ...game, winner: team }
