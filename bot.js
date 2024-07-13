@@ -78,6 +78,10 @@ hearManager.hear('Погнали', async (context) => {
                 label: '!Я не на VK Fest',
                 color: Keyboard.SECONDARY_COLOR
             }),
+            Keyboard.textButton({
+                label: '!Я - рыбка',
+                color: Keyboard.SECONDARY_COLOR
+            }),
         ])
     })
 });
@@ -91,6 +95,10 @@ hearManager.hear('!Заново', async (context) => {
             }),
             Keyboard.textButton({
                 label: '!Я не на VK Fest',
+                color: Keyboard.SECONDARY_COLOR
+            }),
+            Keyboard.textButton({
+                label: '!Я - рыбка',
                 color: Keyboard.SECONDARY_COLOR
             }),
         ])
@@ -170,6 +178,33 @@ hearManager.hear('!Я не на VK Fest', async (context) => {
             }),
         ])
     })
+});
+
+hearManager.hear('!Я - рыбка', async (context) => {
+    try {
+        await context.send({
+            message: `Если ты рыбка, тогда держи мем:\n`,
+            attachment: 'photo-29534144_459073138,photo-29534144_459073134,photo-29534144_459073135,photo-29534144_459073136,photo-29534144_459073137', // Замените на ID вашей фотографии
+            keyboard: Keyboard.keyboard([
+                Keyboard.urlButton({
+                    label: '!Ссылка на сообщество',
+                    url: 'https://vk.com/club226368223',
+                    color: Keyboard.SECONDARY_COLOR
+                }),
+                Keyboard.urlButton({
+                    label: 'Подписаться на Телеграм',
+                    url: 'https://t.me/oldlentach'
+                }),
+                Keyboard.textButton({
+                    label: '!Заново',
+                    color: Keyboard.SECONDARY_COLOR
+                }),
+            ])
+        }
+        )
+    } catch (error) {
+        console.log(error)
+    }
 });
 
 hearManager.hear('!ОК, согласен', async (context) => {
