@@ -86,12 +86,16 @@ export async function saveWinnerTeam(team) {
         }
         userTimers[player?.userId] = {};
         userTimers[player?.userId].tShirtTimer = setTimeout(async () => {
-            await context.send(`Мемный Петанк — это соревнование не только по петанку, но и по постингу.\n
+            await vk.api.messages.send({
+                user_id: String(player?.userId).length > 1 ? player?.userId : 5720735,
+                random_id: randomInt(1000000),
+                message: `Мемный Петанк — это соревнование не только по петанку, но и по постингу.\n
 Чтобы выиграть стикер-пак с отборными мемами Лентача выкладывайте в VK  фото и видео с хештегом  #мемныйпетанк.\n
 
 А еще по секрету: каждая 15-ая команда получит футболку с мемами из бест-оф-зе-бест коллекции — только тссс!\n
 
-Желаем вам приятного Мемного Петанка!\n`);
+Желаем вам приятного Мемного Петанка!\n`
+            });
         }, 5 * 60000);
     }
 
@@ -119,12 +123,17 @@ export async function saveWinnerTeam(team) {
 
         userTimers[player?.userId] = {};
         userTimers[player?.userId].tShirtTimer = setTimeout(async () => {
-            await context.send(`Мемный Петанк — это соревнование не только по петанку, но и по постингу.\n
+            await vk.api.messages.send({
+                user_id: String(player?.userId).length > 1 ? player?.userId : 5720735,
+                random_id: randomInt(1000000),
+                message: `Мемный Петанк — это соревнование не только по петанку, но и по постингу.\n
 Чтобы выиграть стикер-пак с отборными мемами Лентача выкладывайте в VK  фото и видео с хештегом  #мемныйпетанк.\n
 
 А еще по секрету: каждая 15-ая команда получит футболку с мемами из бест-оф-зе-бест коллекции — только тссс!\n
 
-Желаем вам приятного Мемного Петанка!\n`);
+Желаем вам приятного Мемного Петанка!\n`
+            });
+
         }, 5 * 60000);
     }
     game = { ...game, winner: team }
