@@ -75,10 +75,6 @@ hearManager.hear('Погнали', async (context) => {
                 color: Keyboard.PRIMARY_COLOR
             }),
             Keyboard.textButton({
-                label: '!Я не на VK Fest',
-                color: Keyboard.SECONDARY_COLOR
-            }),
-            Keyboard.textButton({
                 label: '!Я - рыбка',
                 color: Keyboard.SECONDARY_COLOR
             }),
@@ -92,10 +88,6 @@ hearManager.hear('!Заново', async (context) => {
             Keyboard.textButton({
                 label: '!ОК, согласен',
                 color: Keyboard.PRIMARY_COLOR
-            }),
-            Keyboard.textButton({
-                label: '!Я не на VK Fest',
-                color: Keyboard.SECONDARY_COLOR
             }),
             Keyboard.textButton({
                 label: '!Я - рыбка',
@@ -160,25 +152,25 @@ vk.updates.on('wall_repost', async (context) => {
 //     await hearManager.middleware(context);
 // });
 
-hearManager.hear('!Я не на VK Fest', async (context) => {
-    await context.send(`Если ты не на VK Fest… окажись там виртуально!\nИ краткий обзор бренд-зоны Lentach на VK Fest.\n`, {
-        keyboard: Keyboard.keyboard([
-            Keyboard.urlButton({
-                label: '!Ссылка на сообщество',
-                url: 'https://vk.com/club226526399',
-                color: Keyboard.SECONDARY_COLOR
-            }),
-            Keyboard.urlButton({
-                label: 'Подписаться на Телеграм',
-                url: 'https://t.me/oldlentach'
-            }),
-            Keyboard.textButton({
-                label: '!Заново',
-                color: Keyboard.PRIMARY_COLOR
-            }),
-        ])
-    })
-});
+// hearManager.hear('!Я не на VK Fest', async (context) => {
+//     await context.send(`Если ты не на VK Fest… окажись там виртуально!\nИ краткий обзор бренд-зоны Lentach на VK Fest.\n`, {
+//         keyboard: Keyboard.keyboard([
+//             Keyboard.urlButton({
+//                 label: '!Ссылка на сообщество',
+//                 url: 'https://vk.com/club226526399',
+//                 color: Keyboard.SECONDARY_COLOR
+//             }),
+//             Keyboard.urlButton({
+//                 label: 'Подписаться на Телеграм',
+//                 url: 'https://t.me/oldlentach'
+//             }),
+//             Keyboard.textButton({
+//                 label: '!Заново',
+//                 color: Keyboard.PRIMARY_COLOR
+//             }),
+//         ])
+//     })
+// });
 
 hearManager.hear('!Я - рыбка', async (context) => {
     try {
@@ -188,7 +180,7 @@ hearManager.hear('!Я - рыбка', async (context) => {
             keyboard: Keyboard.keyboard([
                 Keyboard.urlButton({
                     label: '!Ссылка на сообщество',
-                    url: 'https://vk.com/club226368223',
+                    url: 'https://vk.com/lentach',
                     color: Keyboard.SECONDARY_COLOR
                 }),
                 Keyboard.urlButton({
