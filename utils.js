@@ -84,8 +84,8 @@ export async function saveWinnerTeam(team) {
         if (userTimers[player?.userId]) {
             clearTimeout(userTimers[player?.userId].tShirtTimer);
         }
-        userTimers[userId] = {};
-        userTimers[userId].tShirtTimer = setTimeout(async () => {
+        userTimers[player?.userId] = {};
+        userTimers[player?.userId].tShirtTimer = setTimeout(async () => {
             await context.send(`Мемный Петанк — это соревнование не только по петанку, но и по постингу.\n
 Чтобы выиграть стикер-пак с отборными мемами Лентача выкладывайте в VK  фото и видео с хештегом  #мемныйпетанк.\n
 
@@ -117,8 +117,8 @@ export async function saveWinnerTeam(team) {
             clearTimeout(userTimers[player?.userId]?.tShirtTimer);
         }
 
-        userTimers[userId] = {};
-        userTimers.tShirtTimer = setTimeout(async () => {
+        userTimers[player?.userId] = {};
+        userTimers[player?.userId].tShirtTimer = setTimeout(async () => {
             await context.send(`Мемный Петанк — это соревнование не только по петанку, но и по постингу.\n
 Чтобы выиграть стикер-пак с отборными мемами Лентача выкладывайте в VK  фото и видео с хештегом  #мемныйпетанк.\n
 
