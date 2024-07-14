@@ -36,9 +36,17 @@ export const greetedUsers = fs.existsSync('greetedUsers.json') ? JSON.parse(fs.r
 export const adminIds = [5720735, 710320271, 528604423, 472830827, 577130021, 178488636, 276385455, 329805700];//710320271
 export const users = fs.existsSync('users.json') ? JSON.parse(fs.readFileSync('users.json')) : [];
 export const usersAgreement = fs.existsSync('usersAgreement.json') ? JSON.parse(fs.readFileSync('usersAgreement.json')) : [];
+export const game = fs.existsSync('game.json') ? JSON.parse(fs.readFileSync('game.json')) : {
+    id: null,
+    players: [],
+    purple: [],
+    white: [],
+    winner: null
+};
 export const saveUsers = async () => fs.writeFileSync('users.json', JSON.stringify(users, null, 2));
 export const saveUserAgreement = async () => fs.writeFileSync('usersAgreement.json', JSON.stringify(usersAgreement, null, 2));
 export const saveGreetedUsers = async () => fs.writeFileSync('greetedUsers.json', JSON.stringify(greetedUsers, null, 2));
+export const saveGame = async (newGame) => fs.writeFileSync('game.json', JSON.stringify(newGame || game, null, 2))
 
 export let teams = {
     purple: [],
@@ -46,13 +54,6 @@ export let teams = {
 };
 
 export const queue = [];
-export let game = {
-    id: null,
-    players: [],
-    purple: [],
-    white: [],
-    winner: null
-};
 
 export async function saveWinnerTeam(team) {
     console.log('saveWinnerTeam game', game);
@@ -128,16 +129,11 @@ export async function saveWinnerTeam(team) {
 
         }, 5 * 60000);
     }
-    game = { ...game, winner: team }
-    winnerList.push(game)
+    const winnerGame = { ...game, winner: team }
+    winnerList.push(winnerGame)
     await fs.writeFileSync('winners.json', JSON.stringify(winnerList, null, 2));
-    game = {
-        id: null,
-        players: [],
-        purple: [],
-        white: [],
-        winner: null
-    }
+
+    await clearGame();
     teams.purple = [];
     teams.white = [];
     await checkAndAddPlayersFromQueue();
@@ -149,7 +145,7 @@ export const winnerList = fs.existsSync('winners.json') ? JSON.parse(fs.readFile
 export async function startGame() {
     if ((teams['purple'].length + teams['white'].length) >= 2) {
         const gameNumber = winnerList?.length + 1;
-        game = {
+        const newGame = {
             id: gameNumber,
             timestamp: new Date().toISOString(),
             players: [...teams['purple'], ...teams['white']],
@@ -157,6 +153,7 @@ export async function startGame() {
             white: teams['white'],
             winner: null
         };
+        await saveGame(newGame)
 
 
         const whiteTeamComposition = teams['white']?.map(item => {
@@ -249,7 +246,7 @@ export async function checkAndAddPlayersFromQueue() {
             await vk.api.messages.send({
                 user_id: nextPlayer.userId,
                 random_id: randomInt(1000000),
-                message: 'Вы уже находитесь в одной из команд. 2',
+                message: 'Вы уже находитесь в одной из команд.',
                 keyboard: keyboardCancelRegistration
             }).catch(error => console.log(error));
             return;
@@ -300,13 +297,14 @@ export async function checkAndAddPlayersFromQueue() {
 }
 
 export const clearGame = async () => {
-    game = {
+    const data = {
         id: null,
         players: [],
         purple: [],
         white: [],
         winner: null
     }
+    await saveGame(data)
     teams.purple = [];
     teams.white = [];
     return;
@@ -314,15 +312,17 @@ export const clearGame = async () => {
 
 export const delistUser = async (userId) => {
     // Удаление пользователя из команды "purple" и игры
-    game.purple = game.purple.filter(item => item.userId !== userId);
+    const newGame = {
+        ...game,
+        purple: game.purple.filter(item => item.userId !== userId),
+        white: game.white.filter(item => item.userId !== userId),
+        players: game.players.filter(item => item.userId !== userId)
+    }
+    await saveGame(newGame);
     teams.purple = teams.purple.filter(item => item.userId !== userId);
 
     // Удаление пользователя из команды "white" и игры
-    game.white = game.white.filter(item => item.userId !== userId);
     teams.white = teams.white.filter(item => item.userId !== userId);
-
-    // Удаление пользователя из общего списка игроков игры
-    game.players = game.players.filter(item => item.userId !== userId);
 };
 
 // Функция для получения информации о пользователе

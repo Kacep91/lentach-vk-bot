@@ -546,9 +546,9 @@ hearManager.hear('!Да, сбросить игру', async (context) => {
         const allPlayersOfCurrentGame = game?.players
         for (const player of allPlayersOfCurrentGame) {
             await new Promise(resolve => setTimeout(resolve, 500)); // Задержка в 0,5 секунд
-            await clearGame()
+            await clearGame();
             await vk.api.messages.send({
-                user_id: String(player).length > 1 ? player?.userId : 5720735,
+                user_id: player?.userId,
                 random_id: randomInt(1000000),
                 message: `Игра сброшена, пожалуйста, зарегистрируйтесь заново\n`,
                 keyboard: Keyboard.builder()
